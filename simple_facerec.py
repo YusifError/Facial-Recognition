@@ -35,7 +35,6 @@ class SimpleFacerec:
         # Resize frame for a faster speed
         self.frame_resizing = 0.25
 
-
     def load_encoding_images(self, images_path):
         """
         Load encoding images from path
@@ -77,12 +76,7 @@ class SimpleFacerec:
             matches = face_recognition.compare_faces(self.known_face_encodings, face_encoding)
             name = "Unknown"
 
-            # # If a match was found in known_face_encodings, just use the first one.
-            # if True in matches:
-            #     first_match_index = matches.index(True)
-            #     name = known_face_names[first_match_index]
-
-            # Or instead, use the known face with the smallest distance to the new face
+            # Use the known face with the smallest distance to the new face
             face_distances = face_recognition.face_distance(self.known_face_encodings, face_encoding)
             best_match_index = np.argmin(face_distances)
             if matches[best_match_index]:
