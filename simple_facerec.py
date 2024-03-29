@@ -1,30 +1,12 @@
 import face_recognition
 import cv2
-import os
 import glob
 import numpy as np
-from pymongo import MongoClient
-import gridfs
 import os
-from dotenv import load_dotenv, find_dotenv
+from data import load_images, check
 
-load_dotenv(find_dotenv())
 
-client = MongoClient(os.environ.get('CLIENT'))
-db = client['Faces']
-celebrities = db['Celebrities']
-people = db['People']
-
-fs = gridfs.GridFS(db)
-
-for img in people.find():
-    meta = img['meta']
-    gOut = fs.get(meta['imageID'])
-
-    image = np.frombuffer(gOut.read(), dtype=np.uint8)
-    image = np.reshape(image, meta['shape'])
-    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-    cv2.imwrite(f'./images/{img["name"]}.jpg', image)
+load_images()
 
 
 class SimpleFacerec:
@@ -62,7 +44,7 @@ class SimpleFacerec:
             self.known_face_names.append(filename)
         print("Encoding images loaded")
 
-    def detect_known_faces(self, frame):
+    async def detect_known_faces(self, frame):
         small_frame = cv2.resize(frame, (0, 0), fx=self.frame_resizing, fy=self.frame_resizing)
         # Find all the faces and face encodings in the current frame of video
         # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
@@ -82,6 +64,7 @@ class SimpleFacerec:
             if matches[best_match_index]:
                 name = self.known_face_names[best_match_index]
             face_names.append(name)
+            await check(name)
 
         # Convert to numpy array to adjust coordinates with frame resizing quickly
         face_locations = np.array(face_locations)
