@@ -3,7 +3,6 @@ import cv2
 import glob
 import numpy as np
 import os
-import functools
 from data import check
 
 
@@ -15,7 +14,6 @@ class SimpleFacerec:
         # Resize frame for a faster speed
         self.frame_resizing = 0.25
 
-    @functools.lru_cache()
     async def load_encoding_images(self, images_path):
         """
         Load encoding images from path
