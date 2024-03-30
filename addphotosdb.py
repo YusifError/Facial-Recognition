@@ -1,9 +1,12 @@
 from pymongo import MongoClient
+from dotenv import load_dotenv, find_dotenv
 import gridfs
 import os
 import cv2
 
-client = MongoClient('mongodb+srv://yusifgurbanov:Yusif2003@profilefaces.lgnco8f.mongodb.net/?retryWrites=true&w=majority&appName=ProfileFaces')
+load_dotenv(find_dotenv())
+
+client = MongoClient(os.environ.get('CLIENT'))
 db = client['Faces']
 celebrities = db['Celebrities']
 people = db['People']

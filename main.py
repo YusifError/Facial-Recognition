@@ -1,7 +1,7 @@
-import asyncio
-import cv2
 from simple_facerec import SimpleFacerec
 from data import load_images, check
+import asyncio
+import cv2
 
 # Распознование базы наших лиц
 sfr = SimpleFacerec()

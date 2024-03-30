@@ -1,7 +1,7 @@
+import numpy as np
 import face_recognition
 import cv2
 import glob
-import numpy as np
 import os
 
 
