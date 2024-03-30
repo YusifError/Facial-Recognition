@@ -1,18 +1,17 @@
 import asyncio
 import cv2
 from simple_facerec import SimpleFacerec
-from datetime import datetime, timedelta
+from data import load_images
 
 # Распознование базы наших лиц
 sfr = SimpleFacerec()
-sfr.load_encoding_images("images/")
 
 # Загрузка камеры
 cap = cv2.VideoCapture(0)
 
 
 async def main():
-    while True:
+    while 1:
         ret, frame = cap.read()
 
         # Распознание персон (лиц)
@@ -30,4 +29,6 @@ async def main():
             break
 
 if __name__ == '__main__':
+    asyncio.run(load_images())
+    asyncio.run(sfr.load_encoding_images("images/"))
     asyncio.run(main())

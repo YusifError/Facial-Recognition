@@ -18,7 +18,7 @@ detected = db['Detected']
 fs = gridfs.GridFS(db)
 
 
-def load_images():
+async def load_images():
     for img in people.find():
         meta = img['meta']
         gOut = fs.get(meta['imageID'])
@@ -29,7 +29,7 @@ def load_images():
         cv2.imwrite(f'./images/{img["name"]}.jpg', image)
 
 
-async def insert(name: str):
+async def insert(name: str) -> None:
     now = datetime.utcnow()
 
     insert_data = {
@@ -40,7 +40,7 @@ async def insert(name: str):
     detected.insert_one(insert_data)
 
 
-async def check(name: str):
+async def check(name: str) -> None:
     now = datetime.utcnow()
     human = detected.find_one({'name': name})
 
