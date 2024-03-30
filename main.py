@@ -1,7 +1,7 @@
 import asyncio
 import cv2
 from simple_facerec import SimpleFacerec
-from data import load_images
+from data import load_images, check
 
 # Распознование базы наших лиц
 sfr = SimpleFacerec()
@@ -21,6 +21,8 @@ async def main():
 
             cv2.putText(frame, name, (x1, y1 - 10), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 200), 2)
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 200), 4)
+            bgr_frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+            await check(name, bgr_frame)
 
         cv2.imshow("Frame", frame)
 

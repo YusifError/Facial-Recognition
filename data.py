@@ -25,22 +25,30 @@ async def load_images():
 
         image = np.frombuffer(gOut.read(), dtype=np.uint8)
         image = np.reshape(image, meta['shape'])
-        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         cv2.imwrite(f'./images/{img["name"]}.jpg', image)
 
 
-async def insert(name: str) -> None:
+async def insert(name: str, image) -> None:
     now = datetime.utcnow()
+
+    image_string = image.tobytes()
+    image_id = fs.put(image_string, encoding='utf-8')
 
     insert_data = {
         'name': name,
-        'date': now
+        'date': now,
+        'photo': {
+            'imageID': image_id,
+            'shape': image.shape,
+            'dtype': str(image.dtype)
+        }
     }
 
     detected.insert_one(insert_data)
 
 
-async def check(name: str) -> None:
+async def check(name: str, image) -> None:
     now = datetime.utcnow()
     human = detected.find_one({'name': name})
 
@@ -51,4 +59,4 @@ async def check(name: str) -> None:
         else:
             pass
     else:
-        await insert(name)
+        await insert(name, image)

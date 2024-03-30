@@ -3,7 +3,6 @@ import cv2
 import glob
 import numpy as np
 import os
-from data import check
 
 
 class SimpleFacerec:
@@ -61,7 +60,6 @@ class SimpleFacerec:
             if matches[best_match_index]:
                 name = self.known_face_names[best_match_index]
             face_names.append(name)
-            await check(name)
 
         # Convert to numpy array to adjust coordinates with frame resizing quickly
         face_locations = np.array(face_locations)
