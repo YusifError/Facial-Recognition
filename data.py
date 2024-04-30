@@ -51,11 +51,19 @@ async def insert(name: str, image) -> None:
 async def check(name: str, image) -> None:
     now = datetime.utcnow()
     human = detected.find_one({'name': name})
+    image_string = image.tobytes()
+    image_id = fs.put(image_string, encoding='utf-8')
 
     if human is not None:
         detection_date = human['date']
         if now - timedelta(minutes=2) >= detection_date:
             detected.update_one({'name': name}, {'$set': {'date': now}})
+            detected.update_one({'name': name},
+                                {'$set': {'photo': {
+                                    'imageID': image_id,
+                                    'shape': image.shape,
+                                    'dtype': str(image.dtype)
+                                }}})
         else:
             pass
     else:
