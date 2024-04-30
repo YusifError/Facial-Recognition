@@ -30,7 +30,18 @@ async def main():
         if key == 27:
             break
 
+
+async def run():
+    print('Выберите пункт меню:\n'
+          '1: Начать работу\n'
+          '2: Обновить папку с картинками')
+    point = input()
+
+    if point == '1':
+        await sfr.load_encoding_images('./images')
+        await main()
+    elif point == '2':
+        await load_images()
+
 if __name__ == '__main__':
-    asyncio.run(load_images())
-    asyncio.run(sfr.load_encoding_images("images/"))
-    asyncio.run(main())
+    asyncio.run(run())
